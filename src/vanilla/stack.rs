@@ -1,17 +1,27 @@
 /*creating a dynamically-sized stack*/
-pub struct VectorStack<T> {
-    elements: Vec<T>
+pub struct Stack<T> {
+    elements: Vec<T>,
+    max_size: Option<usize>
 }
 
-impl<T> VectorStack<T> {
+impl<T> Stack<T> {
     /*initialize a new empty stack*/
-    pub fn new() -> Self {
-        VectorStack { elements: Vec::new() }
+    pub fn new(max_size: Option<usize>) -> Self {
+        Stack { 
+            elements: Vec::new(),
+            max_size,
+        }
     }
 
     /*push an element to the stack*/
-    pub fn push(&mut self, item: T){
+    pub fn push(&mut self, item: T) -> Result<(), &'static str>{
+        if let Some(limit) = self.max_size {
+            if self.elements.len() >= limit{
+                return Err("Stack overflow: max size reached!");
+            }
+        }
         self.elements.push(item);
+        Ok(())
     }
 
     /*pop an element off the stack*/
@@ -32,5 +42,9 @@ impl<T> VectorStack<T> {
     /*return the number of elements on the stack*/
     pub fn size(&mut self) -> usize {
         self.elements.len()
+    }
+
+    pub fn get_max(&mut self) -> Option<usize> {
+        self.max_size
     }
 }
