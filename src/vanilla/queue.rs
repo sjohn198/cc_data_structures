@@ -59,6 +59,7 @@ impl<T: PartialEq> PartialEq for Queue<T> {
     }
 }
 
+/*print formatter for debugging */
 impl<T: Debug> Debug for Queue<T> {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         f.debug_struct("Queue")

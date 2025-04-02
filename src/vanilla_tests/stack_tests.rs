@@ -297,3 +297,12 @@ fn large_test_fixed() {
     assert_eq!(stack.peek(), None);
     assert!(stack.is_empty());
 }
+
+/*-------------Testing PartialEq-------------*/
+#[test]
+fn partial_equality() {
+    let stack: Stack<i16> = Stack::new(Some(4));
+    let stack2: Stack<i16> = Stack::new(Some(4));
+
+    assert_eq!(stack, stack2);
+}

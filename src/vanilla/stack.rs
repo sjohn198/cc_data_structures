@@ -1,3 +1,5 @@
+use std::fmt::{self, Debug, Formatter};
+
 /*creating a dynamically-sized stack*/
 pub struct Stack<T> {
     elements: Vec<T>,
@@ -46,5 +48,22 @@ impl<T> Stack<T> {
 
     pub fn get_max(&mut self) -> Option<usize> {
         self.max_size
+    }
+}
+
+/*equality by value. used for testing */
+impl<T: PartialEq> PartialEq for Stack<T> {
+    fn eq(&self, other: &Self) ->  bool {
+        self.elements == other.elements && self.max_size == other.max_size
+    }
+}
+
+/*print formatter for debugging */
+impl<T: Debug> Debug for Stack<T> {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.debug_struct("Queue")
+            .field("elements", &self.elements)
+            .field("max_size", &self.max_size)
+            .finish()
     }
 }
