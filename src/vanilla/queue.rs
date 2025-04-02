@@ -1,4 +1,5 @@
 use std::collections::VecDeque;
+use std::fmt::{self, Debug, Formatter};
 
 pub struct Queue<T> {
     elements: VecDeque<T>,
@@ -48,5 +49,21 @@ impl<T> Queue<T>{
     /*return the option representing the max_size if it was set */
     pub fn get_max(&mut self) -> Option<usize> {
         self.max_size
+    }
+}
+
+/*equality by value. used for testing */
+impl<T: PartialEq> PartialEq for Queue<T> {
+    fn eq(&self, other: &Self) ->  bool {
+        self.elements == other.elements && self.max_size == other.max_size
+    }
+}
+
+impl<T: Debug> Debug for Queue<T> {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.debug_struct("Queue")
+            .field("elements", &self.elements)
+            .field("max_size", &self.max_size)
+            .finish()
     }
 }
