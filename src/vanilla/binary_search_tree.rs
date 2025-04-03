@@ -1,6 +1,8 @@
 use std::cmp::max;
 use crate::vanilla::queue::Queue;
 
+/*TODO?: Remove node function? */
+
 pub struct Node<T> {
     key: i32,
     data: T,
@@ -32,10 +34,12 @@ impl<T> BinarySearchTree<T> {
         }
     }
 
+    /*return whether the tree has any nodes*/
     pub fn is_empty(&mut self) -> bool {
         self.root.is_none()
     }
 
+    /*helper function for contains and find. Walks the tree looking for a certain key */
     fn search_helper(node: &Option<Box<Node<T>>>, key: i32) -> Option<&Box<Node<T>>> {
         match node {
             Some(box_node) => {
@@ -51,6 +55,7 @@ impl<T> BinarySearchTree<T> {
         }
     }
 
+    /*returns whether the tree contains a certain key */
     pub fn contains(&mut self, key: i32) -> bool {
         match Self::search_helper(&self.root, key) {
             Some(_) => true,
@@ -58,6 +63,7 @@ impl<T> BinarySearchTree<T> {
         }
     }
 
+    /*returns the data associated with a key if it exists. Otherwise, None */
     pub fn find(&mut self, key: i32) -> Option<&T> {
         match Self::search_helper(&self.root, key) {
             Some(box_node) => {
@@ -67,6 +73,7 @@ impl<T> BinarySearchTree<T> {
         }
     }
 
+    /*insert a new node into the tree */
     pub fn insert(&mut self, key: i32, data: T){
         if self.root.is_none() {
             let box_node: Box<Node<T>> = Box::new(Node::new(key, data, None, None));
@@ -78,6 +85,7 @@ impl<T> BinarySearchTree<T> {
         }
     }
 
+    /*recursive helper function for insert */
     fn insert_helper(node: &mut Option<Box<Node<T>>>, key: i32, data: T) {
         match node {
             Some(box_node) => {
@@ -104,10 +112,12 @@ impl<T> BinarySearchTree<T> {
         }
     }
 
+    /*finds the minimum key value in the tree */
     pub fn find_min(&mut self) -> Result<i32, &'static str> {
         Self::find_min_helper(&self.root)
     }
 
+    /*recursive helper for find_min */
     fn find_min_helper(node: &Option<Box<Node<T>>>) -> Result<i32, &'static str> {
         match node {
             Some(box_node) => {
@@ -121,10 +131,12 @@ impl<T> BinarySearchTree<T> {
         }
     }
 
+    /*find the maximum key value in the tree */
     pub fn find_max(&mut self) -> Result<i32, &'static str> {
         Self::find_max_helper(&self.root)
     }
 
+    /*recursive helper for find_max */
     fn find_max_helper(node: &Option<Box<Node<T>>>) -> Result<i32, &'static str> {
         match node {
             Some(box_node) => {
@@ -138,10 +150,12 @@ impl<T> BinarySearchTree<T> {
         }
     }
 
+    /*finds the height of the tree */
     pub fn tree_height(&mut self) -> i32 {
         Self::tree_height_helper(&self.root)
     }
 
+    /*recursive helper for tree_height */
     fn tree_height_helper(node: &Option<Box<Node<T>>>) -> i32 {
         match node {
             Some(box_node) => {
@@ -155,6 +169,8 @@ impl<T> BinarySearchTree<T> {
         }
     }
 
+    /*-------------Tree Traversal Algorithms-------------*/
+    /*Traverses the tree in a depth-first in-order manner, i.e. left, node, right */
     pub fn inorder_traversal(&mut self) -> Vec<i32> {
         let mut vec: Vec<i32> = Vec::with_capacity(self.size);
         Self::inorder_helper(&self.root, &mut vec);
@@ -172,6 +188,7 @@ impl<T> BinarySearchTree<T> {
         }
     }
 
+    /*Traverses the tree in a depth-first pre-order manner, i.e. node, left, right */
     pub fn preorder_traversal(&mut self) -> Vec<i32> {
         let mut vec: Vec<i32> = Vec::with_capacity(self.size);
         Self::preorder_helper(&self.root, &mut vec);
@@ -189,6 +206,7 @@ impl<T> BinarySearchTree<T> {
         }
     }
 
+    /*Traverses the tree in a depth-first in-order manner, i.e. left, right, node */
     pub fn postorder_traversal(&mut self) -> Vec<i32> {
         let mut vec: Vec<i32> = Vec::with_capacity(self.size);
         Self::postorder_helper(&self.root, &mut vec);
@@ -206,6 +224,9 @@ impl<T> BinarySearchTree<T> {
         }
     }
 
+    /*Traverses the tree in a breadth-first manner.
+    This gets super complicated with error handling from my queue returning a result.
+    TODO: simplify queue max_size property */
     pub fn bfs_traversal(&mut self) -> Vec<i32> {
         let mut q: Queue<&Option<Box<Node<T>>>> = Queue::new(None); 
         let mut trav: Vec<i32> = Vec::with_capacity(self.size);
@@ -222,7 +243,7 @@ impl<T> BinarySearchTree<T> {
                     match option_node {
                         Some(box_node) => {
                             trav.push(box_node.key);
-                            
+
                             match q.enqueue(&box_node.left) {
                                 Ok(_) => {},
                                 Err(_) => return Vec::new()
